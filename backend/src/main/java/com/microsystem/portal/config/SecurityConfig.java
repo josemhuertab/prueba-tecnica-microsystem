@@ -15,12 +15,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 /**
- * Configuración central de seguridad de la aplicación.
+ * Aquí configuro toda la seguridad de la aplicación en un solo lugar.
  *
- * Define:
+ * Las tres decisiones principales que tomé:
  * - Qué rutas son públicas y cuáles requieren autenticación
- * - Que la sesión es stateless (sin cookies, todo por JWT)
- * - CORS: permite peticiones desde el frontend en localhost:5173
+ * - Que la sesión sea stateless (sin cookies, todo viaja en el JWT)
+ * - CORS restringido solo al frontend en localhost:5173
  */
 @Configuration
 @EnableWebSecurity
@@ -35,14 +35,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())           // No necesario en APIs REST con JWT
+            .csrf(csrf -> csrf.disable())           // No necesito CSRF porque uso JWT, no cookies de sesión
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/login").permitAll()  // Login es la única ruta pública
-                .anyRequest().authenticated()                    // Todo lo demás requiere JWT válido
+                .requestMatchers("/api/auth/login").permitAll()  // El login es la única ruta que dejo pública
+                .anyRequest().authenticated()                    // Todo lo demás exige JWT válido
             )
-            // Nuestro filtro JWT se ejecuta antes del filtro de autenticación estándar de Spring
+            // Pongo mi filtro JWT antes del filtro de autenticación estándar de Spring
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -51,7 +51,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // Solo aceptamos peticiones del frontend Vue en desarrollo
+        // Solo acepto peticiones del frontend Vue durante el desarrollo
         config.setAllowedOrigins(List.of("http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));

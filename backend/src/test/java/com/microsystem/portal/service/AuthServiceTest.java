@@ -20,14 +20,14 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests unitarios para AuthService.
+ * Aquí pruebo la lógica de autenticación de AuthService de forma aislada.
  *
- * Usamos @ExtendWith(MockitoExtension.class) para que Mockito
- * inyecte los mocks automáticamente sin levantar el contexto de Spring.
- * Esto hace los tests muy rápidos (milisegundos).
+ * Usé @ExtendWith(MockitoExtension.class) para que Mockito inyecte los mocks
+ * automáticamente sin necesidad de levantar el contexto de Spring.
+ * Esto hace que los tests corran en milisegundos.
  *
- * @Mock      → crea un objeto falso que podemos controlar
- * @InjectMocks → crea la clase real e inyecta los mocks en su constructor
+ * @Mock        → creo un objeto falso que puedo controlar en cada test
+ * @InjectMocks → creo la clase real e inyecto los mocks en su constructor
  */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
@@ -41,7 +41,7 @@ class AuthServiceTest {
     @InjectMocks
     private AuthService authService;
 
-    // Usuario de prueba que usaremos en varios tests
+    // Datos de prueba que reutilizo en varios tests
     private static final String USERNAME_VALIDO = "JuanPerezDelCampo001";
     private static final String PASSWORD = "password123";
 
@@ -49,7 +49,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        // Creamos el hash exactamente igual que lo hace AuthService:
+        // Genero el hash exactamente igual que lo hace AuthService internamente:
         // SHA-256("username:password") → hex string
         String combined = USERNAME_VALIDO + ":" + PASSWORD;
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -67,7 +67,7 @@ class AuthServiceTest {
     @Test
     @DisplayName("Login exitoso → retorna token JWT")
     void login_credencialesCorrectas_retornaToken() {
-        // Arrange: el repositorio "encuentra" al usuario y JwtUtil genera un token falso
+        // Le digo al mock que "encuentre" al usuario y que genere un token de prueba
         when(usuarioRepository.findByUsername(USERNAME_VALIDO))
                 .thenReturn(Optional.of(usuarioDePrueba));
         when(jwtUtil.generateToken(USERNAME_VALIDO))
@@ -79,7 +79,7 @@ class AuthServiceTest {
         // Assert
         assertThat(token).isEqualTo("token.jwt.falso");
 
-        // Verificamos que sí se llamó al repositorio y al generador de token
+        // Verifico que sí se consultó el repositorio y se generó el token
         verify(usuarioRepository).findByUsername(USERNAME_VALIDO);
         verify(jwtUtil).generateToken(USERNAME_VALIDO);
     }
@@ -90,19 +90,19 @@ class AuthServiceTest {
     @Test
     @DisplayName("Username sin mayúscula inicial → lanza IllegalArgumentException")
     void login_usernameFormatoInvalido_lanzaExcepcion() {
-        // "juanPerezDelCampo001" empieza con minúscula → no cumple el regex
+        // "juanPerezDelCampo001" empieza con minúscula, no cumple el regex que definí
         assertThatThrownBy(() -> authService.login("juanPerezDelCampo001", PASSWORD))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("formato requerido");
 
-        // El repositorio nunca debería consultarse si el formato ya es inválido
+        // Si el formato ya es inválido, no debería llegar a consultar la base de datos
         verifyNoInteractions(usuarioRepository);
     }
 
     @Test
     @DisplayName("Username muy corto (menos de 15 chars) → lanza IllegalArgumentException")
     void login_usernameMuyCorto_lanzaExcepcion() {
-        // "JuanP001" tiene solo 8 caracteres, mínimo es 15
+        // "JuanP001" tiene solo 8 caracteres, el mínimo que definí es 15
         assertThatThrownBy(() -> authService.login("JuanP001", PASSWORD))
                 .isInstanceOf(IllegalArgumentException.class);
 
@@ -112,7 +112,7 @@ class AuthServiceTest {
     @Test
     @DisplayName("Username sin 3 dígitos al final → lanza IllegalArgumentException")
     void login_usernameSinDigitosAlFinal_lanzaExcepcion() {
-        // "JuanPerezDelCampoXYZ" termina en letras, no en 3 dígitos
+        // "JuanPerezDelCampoXYZ" termina en letras, no en los 3 dígitos que exijo
         assertThatThrownBy(() -> authService.login("JuanPerezDelCampoXYZ", PASSWORD))
                 .isInstanceOf(IllegalArgumentException.class);
 
@@ -125,7 +125,7 @@ class AuthServiceTest {
     @Test
     @DisplayName("Usuario no registrado → lanza SecurityException")
     void login_usuarioNoExiste_lanzaSecurityException() {
-        // El repositorio devuelve vacío → usuario no encontrado
+        // El mock devuelve vacío para simular que el usuario no está registrado
         when(usuarioRepository.findByUsername(USERNAME_VALIDO))
                 .thenReturn(Optional.empty());
 
@@ -133,7 +133,7 @@ class AuthServiceTest {
                 .isInstanceOf(SecurityException.class)
                 .hasMessageContaining("Credenciales incorrectas");
 
-        // Si el usuario no existe, nunca debemos generar un token
+        // Si el usuario no existe, no debo generar ningún token
         verifyNoInteractions(jwtUtil);
     }
 
@@ -143,7 +143,7 @@ class AuthServiceTest {
     @Test
     @DisplayName("Contraseña incorrecta → lanza SecurityException")
     void login_passwordIncorrecta_lanzaSecurityException() {
-        // El usuario existe pero la contraseña enviada es diferente
+        // El usuario existe en la BD pero envío una contraseña diferente
         when(usuarioRepository.findByUsername(USERNAME_VALIDO))
                 .thenReturn(Optional.of(usuarioDePrueba));
 
@@ -151,6 +151,7 @@ class AuthServiceTest {
                 .isInstanceOf(SecurityException.class)
                 .hasMessageContaining("Credenciales incorrectas");
 
+        // Con contraseña incorrecta tampoco debo generar token
         verifyNoInteractions(jwtUtil);
     }
 }

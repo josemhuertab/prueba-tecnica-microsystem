@@ -11,22 +11,22 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Acceso a la tabla de recibos en SQLite.
+ * Accedo a la tabla de recibos en SQLite desde aquí.
  */
 @Repository
 public interface ReciboPagoRepository extends JpaRepository<ReciboPago, Long> {
 
     /**
-     * Trae los recibos de un usuario ordenados del más reciente al más antiguo.
-     * Usamos Pageable en lugar de LIMIT para compatibilidad con todos los dialectos JPA.
-     * El límite de 20 se aplica desde el servicio con PageRequest.of(0, 20).
+     * Traigo los recibos de un usuario ordenados del más reciente al más antiguo.
+     * Usé Pageable en lugar de LIMIT porque es más compatible con todos los dialectos JPA.
+     * El límite de 20 lo aplico desde el servicio con PageRequest.of(0, 20).
      */
     @Query("SELECT r FROM ReciboPago r WHERE r.username = :username ORDER BY r.fechaPago DESC")
     List<ReciboPago> findTop20ByUsername(@Param("username") String username, Pageable pageable);
 
     /**
-     * Busca un recibo por ID y verifica que pertenezca al usuario indicado.
-     * Esto evita que un usuario pueda ver recibos de otro aunque conozca el ID.
+     * Busco un recibo por ID verificando al mismo tiempo que pertenezca al usuario indicado.
+     * Así evito que alguien pueda ver recibos de otro usuario aunque conozca el ID.
      */
     Optional<ReciboPago> findByIdAndUsername(Long id, String username);
 }

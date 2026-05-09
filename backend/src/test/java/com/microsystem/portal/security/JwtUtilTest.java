@@ -8,29 +8,29 @@ import org.springframework.test.util.ReflectionTestUtils;
 import static org.assertj.core.api.Assertions.*;
 
 /**
- * Tests unitarios para JwtUtil.
+ * Aquí pruebo JwtUtil de forma completamente aislada.
  *
- * JwtUtil no tiene dependencias externas, así que no necesitamos Mockito.
- * Creamos la instancia directamente y usamos ReflectionTestUtils para
- * inyectar los valores de @Value (que normalmente los pone Spring).
+ * Como JwtUtil no tiene dependencias externas, no necesité Mockito.
+ * Creo la instancia directamente y uso ReflectionTestUtils para inyectar
+ * los valores de @Value que normalmente Spring inyecta desde application.properties.
  *
- * Estos tests verifican el contrato del token:
+ * Lo que verifico en estos tests es el contrato del token:
  *   - Un token generado contiene el username correcto
  *   - Un token válido pasa la validación
- *   - Un token manipulado o vencido falla la validación
+ *   - Un token manipulado o vencido es rechazado
  */
 class JwtUtilTest {
 
     private JwtUtil jwtUtil;
 
-    // Mismos valores que application.properties
+    // Uso los mismos valores que están en application.properties
     private static final String SECRET = "MicrosystemPortalSecretKey2024SuperSegura";
     private static final long EXPIRATION_24H = 86_400_000L; // 24 horas en ms
 
     @BeforeEach
     void setUp() {
         jwtUtil = new JwtUtil();
-        // Inyectamos los campos @Value manualmente (sin levantar Spring)
+        // Inyecto los campos @Value manualmente para no tener que levantar Spring
         ReflectionTestUtils.setField(jwtUtil, "secret", SECRET);
         ReflectionTestUtils.setField(jwtUtil, "expiration", EXPIRATION_24H);
     }
@@ -48,7 +48,7 @@ class JwtUtilTest {
         // El token no debe ser nulo ni vacío
         assertThat(token).isNotBlank();
 
-        // Al extraer el username del token debe coincidir con el original
+        // Al extraer el username del token debe coincidir exactamente con el que puse
         assertThat(jwtUtil.extractUsername(token)).isEqualTo(username);
     }
 
@@ -71,7 +71,7 @@ class JwtUtilTest {
     void isTokenValid_tokenManipulado_retornaFalse() {
         String tokenReal = jwtUtil.generateToken("JuanPerezDelCampo001");
 
-        // Alteramos el último carácter de la firma para simular una manipulación
+        // Altero el último carácter de la firma para simular que alguien manipuló el token
         String tokenManipulado = tokenReal.substring(0, tokenReal.length() - 1) + "X";
 
         assertThat(jwtUtil.isTokenValid(tokenManipulado)).isFalse();
@@ -83,7 +83,7 @@ class JwtUtilTest {
     @Test
     @DisplayName("isTokenValid → token vencido retorna false")
     void isTokenValid_tokenVencido_retornaFalse() {
-        // Creamos una instancia con expiración de -1ms (ya nació vencido)
+        // Creo una instancia con expiración de -1ms para que el token nazca ya vencido
         JwtUtil jwtUtilVencido = new JwtUtil();
         ReflectionTestUtils.setField(jwtUtilVencido, "secret", SECRET);
         ReflectionTestUtils.setField(jwtUtilVencido, "expiration", -1L);
@@ -94,11 +94,12 @@ class JwtUtilTest {
     }
 
     // ---------------------------------------------------------------
-    // CASO 5: Un string que no es JWT retorna false (no lanza excepción)
+    // CASO 5: Un string que no es JWT retorna false sin lanzar excepción
     // ---------------------------------------------------------------
     @Test
     @DisplayName("isTokenValid → string basura retorna false sin lanzar excepción")
     void isTokenValid_stringBasura_retornaFalseSinExcepcion() {
+        // Verifico que el método no explote con un input inválido, sino que retorne false limpiamente
         assertThatCode(() -> {
             boolean resultado = jwtUtil.isTokenValid("esto.no.es.un.jwt");
             assertThat(resultado).isFalse();

@@ -18,14 +18,13 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests unitarios para ReciboService.
+ * Aquí pruebo la lógica de consulta de recibos y, lo más importante,
+ * el control de acceso por propietario.
  *
- * El test más importante aquí es el de ownership:
- * un usuario NO debe poder ver recibos de otro usuario,
- * aunque conozca el ID del recibo.
- *
- * Esto es crítico en seguridad y se llama "Broken Object Level Authorization"
- * (BOLA / IDOR) — uno de los riesgos más comunes en APIs REST.
+ * El test de ownership es el más crítico de este archivo:
+ * un usuario NO debe poder ver recibos de otro aunque conozca el ID.
+ * Esto se conoce como IDOR (Insecure Direct Object Reference) y es
+ * uno de los riesgos más comunes en APIs REST.
  */
 @ExtendWith(MockitoExtension.class)
 class ReciboServiceTest {
@@ -43,7 +42,7 @@ class ReciboServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Recibo que pertenece a Juan
+        // Preparo un recibo de prueba que pertenece a Juan
         reciboDePrueba = new ReciboPago();
         reciboDePrueba.setId(1L);
         reciboDePrueba.setUsername(USUARIO_JUAN);
@@ -63,7 +62,7 @@ class ReciboServiceTest {
     @Test
     @DisplayName("obtenerDetalle → el dueño del recibo recibe el detalle correctamente")
     void obtenerDetalle_usuarioCorrecto_retornaRecibo() {
-        // Arrange: el repositorio encuentra el recibo para Juan con id=1
+        // Le digo al mock que devuelva el recibo cuando Juan consulta el id=1
         when(reciboPagoRepository.findByIdAndUsername(1L, USUARIO_JUAN))
                 .thenReturn(Optional.of(reciboDePrueba));
 
@@ -84,11 +83,11 @@ class ReciboServiceTest {
     @Test
     @DisplayName("obtenerDetalle → usuario diferente al dueño lanza SecurityException (IDOR)")
     void obtenerDetalle_usuarioNoPropietario_lanzaSecurityException() {
-        // El repositorio no encuentra el recibo id=1 para María (es de Juan)
+        // El repositorio no encuentra el recibo id=1 para María porque es de Juan
         when(reciboPagoRepository.findByIdAndUsername(1L, USUARIO_MARIA))
                 .thenReturn(Optional.empty());
 
-        // María intenta ver el recibo de Juan → debe ser bloqueada
+        // María intenta ver el recibo de Juan — verifico que sea bloqueada
         assertThatThrownBy(() -> reciboService.obtenerDetalle(1L, USUARIO_MARIA))
                 .isInstanceOf(SecurityException.class)
                 .hasMessageContaining("no autorizado");
@@ -100,14 +99,14 @@ class ReciboServiceTest {
     @Test
     @DisplayName("obtenerUltimos20 → retorna la lista de recibos del usuario")
     void obtenerUltimos20_retornaRecibosDelUsuario() {
-        // Creamos una lista de 3 recibos de prueba para Juan
+        // Preparo 3 recibos de prueba para Juan
         List<ReciboPago> recibosEsperados = List.of(
                 crearRecibo(1L, USUARIO_JUAN, "04-2025"),
                 crearRecibo(2L, USUARIO_JUAN, "03-2025"),
                 crearRecibo(3L, USUARIO_JUAN, "02-2025")
         );
 
-        // El repositorio devuelve esos 3 recibos cuando se consulta por Juan
+        // El mock devuelve esos 3 recibos cuando consulto por Juan
         when(reciboPagoRepository.findTop20ByUsername(
                 eq(USUARIO_JUAN),
                 eq(PageRequest.of(0, 20))
@@ -118,7 +117,7 @@ class ReciboServiceTest {
 
         // Assert
         assertThat(resultado).hasSize(3);
-        // Todos los recibos deben pertenecer a Juan, ninguno a otro usuario
+        // Me aseguro de que todos los recibos pertenezcan a Juan y ninguno a otro usuario
         assertThat(resultado).allMatch(r -> r.getUsername().equals(USUARIO_JUAN));
     }
 
@@ -139,7 +138,7 @@ class ReciboServiceTest {
     }
 
     // ---------------------------------------------------------------
-    // Método auxiliar para crear recibos de prueba rápidamente
+    // Método auxiliar que uso para crear recibos de prueba rápidamente
     // ---------------------------------------------------------------
     private ReciboPago crearRecibo(Long id, String username, String periodo) {
         ReciboPago r = new ReciboPago();

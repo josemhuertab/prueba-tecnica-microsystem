@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Entidad que representa un recibo de pago mensual.
- * Todos los montos son enteros en pesos chilenos (sin decimales).
+ * Represento un recibo de pago mensual en la base de datos.
+ * Guardé todos los montos como enteros en pesos chilenos (sin decimales).
  *
- * Para agregar un campo nuevo: declara el atributo aquí con su @Column
+ * Si necesito agregar un campo nuevo, lo declaro aquí con su @Column
  * y el frontend lo recibirá automáticamente en el JSON de respuesta.
  */
 @Data
@@ -21,7 +21,7 @@ public class ReciboPago {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Vincula el recibo con su dueño — se usa para verificar acceso
+    // Vinculo el recibo con su dueño — lo uso para verificar el acceso en cada consulta
     @Column(name = "username", nullable = false)
     private String username;
 
@@ -31,7 +31,7 @@ public class ReciboPago {
     @Column(name = "fecha_pago")
     private String fechaPago;
 
-    // Formato MM-YYYY, ej: "04-2025"
+    // Guardo el período en formato MM-YYYY, por ejemplo "04-2025"
     @Column(name = "periodo")
     private String periodo;
 
@@ -52,7 +52,7 @@ public class ReciboPago {
     @Column(name = "otros_descuentos")
     private Long otrosDescuentos;
 
-    // Resultado final: sueldoBase + bonos - descuentos
+    // El resultado final: sueldoBase + bonos - descuentos
     @Column(name = "sueldo_liquido")
     private Long sueldoLiquido;
 

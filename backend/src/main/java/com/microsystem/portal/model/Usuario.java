@@ -5,12 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Entidad que representa un colaborador en la base de datos.
- * La contraseña nunca se guarda en texto plano — solo su hash SHA-256
+ * Represento a un colaborador en la base de datos.
+ * Decidí nunca guardar la contraseña en texto plano — solo almaceno el hash SHA-256
  * generado como SHA-256("username:password").
  */
-@Data               // Lombok genera getters, setters, equals y toString automáticamente
-@NoArgsConstructor  // Lombok genera el constructor vacío que JPA necesita
+@Data               // Le pido a Lombok que genere getters, setters, equals y toString por mí
+@NoArgsConstructor  // JPA necesita un constructor vacío — Lombok lo genera con esta anotación
 @Entity
 @Table(name = "usuarios")
 public class Usuario {

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Endpoints para consultar recibos de pago.
- * Todos requieren autenticación JWT (configurado en SecurityConfig).
+ * Expongo los endpoints para consultar recibos de pago.
+ * Todos requieren autenticación JWT — lo configuré así en SecurityConfig.
  */
 @RestController
 @RequestMapping("/api/recibos")
@@ -25,7 +25,8 @@ public class ReciboController {
 
     /**
      * GET /api/recibos
-     * Retorna los últimos 20 recibos del usuario autenticado.
+     * Leo el username del token JWT (que JwtFilter ya dejó en el contexto de seguridad)
+     * y retorno los últimos 20 recibos de ese usuario.
      */
     @GetMapping
     public ResponseEntity<List<ReciboPago>> listarRecibos(Authentication auth) {
@@ -36,8 +37,8 @@ public class ReciboController {
 
     /**
      * GET /api/recibos/{id}
-     * Retorna el detalle de un recibo específico.
-     * Verifica que el recibo pertenezca al usuario autenticado.
+     * Retorno el detalle de un recibo específico.
+     * Paso el username del token para que el servicio verifique que el recibo le pertenece.
      */
     @GetMapping("/{id}")
     public ResponseEntity<?> detalleRecibo(@PathVariable Long id, Authentication auth) {
@@ -47,6 +48,7 @@ public class ReciboController {
             ReciboPago recibo = reciboService.obtenerDetalle(id, username);
             return ResponseEntity.ok(recibo);
         } catch (SecurityException e) {
+            // El recibo no existe o no pertenece a este usuario — devuelvo 403
             return ResponseEntity.status(403).body(Map.of("error", e.getMessage()));
         }
     }

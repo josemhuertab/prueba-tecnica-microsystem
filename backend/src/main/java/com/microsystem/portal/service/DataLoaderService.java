@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Importa los datos de los archivos CSV a SQLite al arrancar la aplicación.
+ * Me encargo de importar los datos de los CSV a SQLite cuando arranca la aplicación.
  *
- * @PostConstruct hace que cargarDatos() se ejecute automáticamente una vez
+ * Usé @PostConstruct para que cargarDatos() se ejecute automáticamente una vez
  * que Spring termina de inicializar este componente.
- * La verificación de count() > 0 evita duplicar datos en reinicios.
+ * Verifico count() > 0 antes de insertar para no duplicar datos si el servidor se reinicia.
  */
 @Service
 public class DataLoaderService {
@@ -39,12 +39,12 @@ public class DataLoaderService {
     }
 
     private void cargarUsuarios() {
-        if (usuarioRepository.count() > 0) return; // Ya cargados, no duplicar
+        if (usuarioRepository.count() > 0) return; // Ya están cargados, no inserto de nuevo
 
         try (CSVReader reader = new CSVReader(new FileReader("./data/Usuarios.csv"))) {
             List<String[]> filas = reader.readAll();
 
-            for (int i = 1; i < filas.size(); i++) { // i=1 para saltar la cabecera
+            for (int i = 1; i < filas.size(); i++) { // Empiezo en 1 para saltarme la cabecera
                 String[] fila = filas.get(i);
                 if (fila.length < 6) continue;
 
@@ -67,12 +67,12 @@ public class DataLoaderService {
     }
 
     private void cargarRecibos() {
-        if (reciboPagoRepository.count() > 0) return; // Ya cargados, no duplicar
+        if (reciboPagoRepository.count() > 0) return; // Ya están cargados, no inserto de nuevo
 
         try (CSVReader reader = new CSVReader(new FileReader("./data/Recibos de Pago.csv"))) {
             List<String[]> filas = reader.readAll();
 
-            for (int i = 1; i < filas.size(); i++) { // i=1 para saltar la cabecera
+            for (int i = 1; i < filas.size(); i++) { // Empiezo en 1 para saltarme la cabecera
                 String[] fila = filas.get(i);
                 if (fila.length < 11) continue;
 

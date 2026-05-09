@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * Endpoints de autenticación: login y logout.
+ * Expongo los endpoints de autenticación: login y logout.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -21,7 +21,7 @@ public class AuthController {
 
     /**
      * POST /api/auth/login
-     * Recibe username y password, retorna JWT si las credenciales son válidas.
+     * Recibo username y password, y retorno el JWT si las credenciales son válidas.
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
@@ -37,19 +37,19 @@ public class AuthController {
             return ResponseEntity.ok(Map.of("token", token, "username", username));
 
         } catch (IllegalArgumentException e) {
-            // Error de formato del username
+            // El username no cumple el formato requerido
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
 
         } catch (SecurityException e) {
-            // Credenciales incorrectas
+            // Las credenciales no coinciden con ningún usuario registrado
             return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
         }
     }
 
     /**
      * POST /api/auth/logout
-     * El logout en JWT es stateless: el frontend elimina el token.
-     * Este endpoint confirma la operación.
+     * Como uso JWT stateless, el logout real lo hace el frontend eliminando el token.
+     * Este endpoint solo confirma la operación para que el frontend tenga una respuesta limpia.
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {

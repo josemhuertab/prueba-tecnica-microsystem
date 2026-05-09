@@ -11,21 +11,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
- * Genera y valida tokens JWT.
+ * Aquí centralizo toda la lógica de generación y validación de tokens JWT.
  *
- * Un JWT tiene 3 partes separadas por puntos:
- *   header.payload.firma
- * El payload contiene el username y la fecha de expiración.
- * La firma garantiza que nadie puede modificar el token sin la clave secreta.
+ * Un JWT tiene 3 partes separadas por puntos: header.payload.firma
+ * En el payload guardo el username y la fecha de expiración.
+ * La firma es lo que garantiza que nadie puede alterar el token sin conocer la clave secreta.
  */
 @Component
 public class JwtUtil {
 
-    // Clave secreta leída desde application.properties
+    // Leo la clave secreta desde application.properties para no hardcodearla aquí
     @Value("${jwt.secret}")
     private String secret;
 
-    // Tiempo de vida del token en milisegundos (86400000 = 24 horas)
+    // Tiempo de vida del token en milisegundos — uso 86400000 que equivale a 24 horas
     @Value("${jwt.expiration}")
     private long expiration;
 
@@ -33,7 +32,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Crea un token firmado con el username y la fecha de expiración
+    // Genero el token firmado con el username como subject y la fecha de expiración calculada
     public String generateToken(String username) {
         return Jwts.builder()
                 .subject(username)
@@ -43,23 +42,23 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Extrae el username guardado dentro del token
+    // Extraigo el username que guardé dentro del payload del token
     public String extractUsername(String token) {
         return getClaims(token).getSubject();
     }
 
-    // Retorna true si el token tiene firma válida y no ha expirado
+    // Retorno true solo si el token tiene firma válida y todavía no ha expirado
     public boolean isTokenValid(String token) {
         try {
             Claims claims = getClaims(token);
             return !claims.getExpiration().before(new Date());
         } catch (Exception e) {
-            // Cualquier error (firma inválida, token malformado) se trata como inválido
+            // Si la firma es inválida o el token está malformado, lo trato directamente como inválido
             return false;
         }
     }
 
-    // Parsea el token y extrae su contenido (claims)
+    // Parseo el token y extraigo su contenido (claims) verificando la firma al mismo tiempo
     private Claims getClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())

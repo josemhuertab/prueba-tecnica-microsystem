@@ -13,13 +13,13 @@ import java.io.IOException;
 import java.util.Collections;
 
 /**
- * Intercepta cada petición HTTP y valida el JWT antes de que llegue al controlador.
+ * Este filtro intercepta cada petición HTTP y valida el JWT antes de que llegue al controlador.
  *
- * Flujo:
- *   1. Lee el header "Authorization: Bearer <token>"
- *   2. Valida el token con JwtUtil
- *   3. Si es válido, registra al usuario en el contexto de seguridad
- *   4. Pasa la petición al siguiente filtro o controlador
+ * El flujo que implementé es:
+ *   1. Leo el header "Authorization: Bearer <token>"
+ *   2. Valido el token con JwtUtil
+ *   3. Si es válido, registro al usuario en el contexto de seguridad de Spring
+ *   4. Paso la petición al siguiente filtro o controlador sin importar el resultado
  */
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -38,14 +38,14 @@ public class JwtFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            // Extraemos el token quitando el prefijo "Bearer "
+            // Quito el prefijo "Bearer " para quedarme solo con el token
             String token = authHeader.substring(7);
 
             if (jwtUtil.isTokenValid(token)) {
                 String username = jwtUtil.extractUsername(token);
 
-                // Registramos la identidad del usuario para que los controladores
-                // puedan acceder a ella con el parámetro Authentication
+                // Registro la identidad del usuario en el contexto de seguridad
+                // para que los controladores puedan leerla con el parámetro Authentication
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
 
@@ -53,7 +53,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        // Continuamos con la cadena de filtros independientemente del resultado
+        // Siempre continúo con la cadena de filtros, aunque el token sea inválido o no exista
         filterChain.doFilter(request, response);
     }
 }

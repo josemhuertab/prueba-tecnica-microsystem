@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 /**
- * Acceso a la tabla de usuarios en SQLite.
- * Spring Data JPA genera la implementación automáticamente en tiempo de ejecución.
+ * Accedo a la tabla de usuarios en SQLite desde aquí.
+ * Spring Data JPA genera la implementación automáticamente en tiempo de ejecución, no tengo que escribirla yo.
  */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
