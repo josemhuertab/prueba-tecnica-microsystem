@@ -238,7 +238,7 @@ Haz clic en cualquier encabezado de columna para ordenar la tabla, en este caso,
 
 Haz clic en cualquier fila de la tabla o en el botón **"Ver →"** para acceder al desglose completo.
 
-*aquí va foto de la pantalla de detalle de un recibo*
+<img width="189" height="132" alt="image" src="https://github.com/user-attachments/assets/36e50cf7-0c03-41c9-bf1c-64b740598c38" />
 
 Esta pantalla muestra:
 
@@ -246,17 +246,17 @@ Esta pantalla muestra:
 - **Descuentos:** Salud, AFP y otros descuentos con su total
 - **Sueldo Líquido:** Monto final a pagar, destacado en la parte inferior
 
-*aquí va foto del bloque de sueldo líquido destacado al fondo de la pantalla*
-
 Para volver al listado, haz clic en **"← Volver a mis recibos"**.
+
+<img width="1600" height="738" alt="image" src="https://github.com/user-attachments/assets/e190021a-1414-4710-b7a6-934d7a016b24" />
 
 ---
 
 ### Cerrar Sesión
 
-Haz clic en el botón **"Cerrar sesión"** en la barra de navegación superior.
+Haz clic en el botón **"Salir""** en la barra de navegación superior.
 
-*aquí va foto de la barra de navegación con el botón de cerrar sesión*
+<img width="328" height="61" alt="image" src="https://github.com/user-attachments/assets/1173e2b1-8c1b-41c5-a8a6-e30bfc7ada78" />
 
 El sistema cerrará tu sesión y te redirigirá automáticamente al login. Tu token JWT expira en 24 horas — si cierras el navegador sin cerrar sesión, deberás volver a ingresar tus credenciales al día siguiente.
 
