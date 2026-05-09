@@ -311,7 +311,7 @@ function formatFecha(fecha) {
 }
 
 .th-sortable:hover {
-  background: rgba(156, 213, 255, 0.15);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .badge-recibo {
