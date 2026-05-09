@@ -27,6 +27,7 @@
   --color-danger-light:  #fdf0ef;
   --color-nav-bg:        #355872;
   --color-nav-text:      #F7F8F0;
+  --color-table-header:  #355872;
 
   --radius:    10px;
   --radius-lg: 16px;
@@ -53,6 +54,7 @@
   --color-danger-light:  #2a1a1a;
   --color-nav-bg:        #0f1c26;
   --color-nav-text:      #e8f0f7;
+  --color-table-header:  #1e3a52;
 }
 
 body {
@@ -191,7 +193,7 @@ table {
 }
 
 thead th {
-  background-color: var(--color-primary);
+  background-color: var(--color-table-header);
   color: #fff;
   padding: 13px 16px;
   text-align: left;

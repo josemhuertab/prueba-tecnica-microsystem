@@ -308,10 +308,11 @@ function formatFecha(fecha) {
 .th-sortable {
   cursor: pointer;
   user-select: none;
+  transition: filter 0.2s ease;
 }
 
 .th-sortable:hover {
-  background: rgba(0, 0, 0, 0.15);
+  filter: brightness(1.18);
 }
 
 .badge-recibo {
