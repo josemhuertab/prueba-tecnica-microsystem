@@ -333,7 +333,7 @@ function formatFecha(fecha) {
   font-family: var(--font-heading);
   font-size: 2.2rem;
   font-weight: 800;
-  color: #9CD5FF;
+  color: #ffffff;
   font-variant-numeric: tabular-nums;
 }
 
