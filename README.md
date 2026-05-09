@@ -165,7 +165,7 @@ El Portal de Recibos de Pago permite a los colaboradores consultar sus últimos 
 
 Al ingresar a `http://localhost:5173` verás el formulario de login.
 
-*aquí va foto de la pantalla de login en modo claro*
+<img width="1600" height="737" alt="image" src="https://github.com/user-attachments/assets/80604a49-c53a-4cbc-a280-23fa97743aff" />
 
 #### Cómo ingresar
 
@@ -181,13 +181,14 @@ Al ingresar a `http://localhost:5173` verás el formulario de login.
 
 Si el usuario o la contraseña no son correctos, verás un mensaje de error debajo del formulario.
 
-*aquí va foto del formulario con un error de credenciales inválidas*
+<img width="1600" height="735" alt="image" src="https://github.com/user-attachments/assets/bb589f58-4871-4843-8138-09714626da07" />
+<img width="1600" height="737" alt="image" src="https://github.com/user-attachments/assets/60f63b49-91a3-4134-943d-8178ab9e5e84" />
 
 #### Modo oscuro
 
 En la esquina superior derecha hay un botón 🌙 / ☀️ para cambiar entre modo claro y oscuro. La preferencia se guarda automáticamente en el navegador.
 
-*aquí va foto de la pantalla de login en modo oscuro*
+<img width="1600" height="738" alt="image" src="https://github.com/user-attachments/assets/c98da9e0-0634-4983-b65c-0ff342e1a332" />
 
 ---
 
@@ -195,7 +196,7 @@ En la esquina superior derecha hay un botón 🌙 / ☀️ para cambiar entre mo
 
 Tras iniciar sesión verás una tabla con tus **últimos 20 recibos de pago**, ordenados del más reciente al más antiguo.
 
-*aquí va foto de la pantalla de listado de recibos con la tabla completa*
+<img width="1600" height="737" alt="image" src="https://github.com/user-attachments/assets/cded513b-2c36-4fbf-8028-d9434927327e" />
 
 #### Panel de filtros
 
@@ -207,15 +208,16 @@ Encima de la tabla hay un panel con tres filtros que se aplican en tiempo real:
 | Año | Desplegable con los años disponibles en tus recibos |
 | Sueldo líquido mínimo | Muestra solo recibos con sueldo líquido mayor al valor ingresado |
 
-*aquí va foto del panel de filtros con algún filtro activo*
+<img width="1125" height="325" alt="image" src="https://github.com/user-attachments/assets/4758f358-25af-4eca-82de-147ad1b7a411" />
 
 El botón **"✕ Limpiar filtros"** restablece todos los filtros a la vez.
 
 #### Ordenar la tabla
 
-Haz clic en cualquier encabezado de columna para ordenar la tabla. Un segundo clic invierte el orden. El ícono ↑ ↓ indica la columna activa y su dirección.
+Haz clic en cualquier encabezado de columna para ordenar la tabla, en este caso, se utiliza el orden por período. Un segundo clic invierte el orden. El ícono ↑ ↓ indica la columna activa y su dirección.
 
-*aquí va foto de la tabla ordenada por sueldo líquido de mayor a menor*
+<img width="1600" height="728" alt="image" src="https://github.com/user-attachments/assets/a55b4c02-7f59-459e-8114-5e058addfd8a" />
+<img width="1600" height="739" alt="image" src="https://github.com/user-attachments/assets/9cb91469-0511-46ef-b570-09870a6c23bb" />
 
 #### Columnas de la tabla
 
