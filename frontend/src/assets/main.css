@@ -1,0 +1,259 @@
+/* =============================================
+   Estilos globales - Portal Microsystem
+   Paleta: #355872 / #7AAACE / #9CD5FF / #F7F8F0
+   ============================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---- Tema claro (default) ---- */
+:root {
+  --color-primary:       #355872;
+  --color-primary-light: #7AAACE;
+  --color-accent:        #9CD5FF;
+  --color-bg:            #F7F8F0;
+  --color-surface:       #ffffff;
+  --color-surface-2:     #eef1f6;
+  --color-text:          #1c2b38;
+  --color-text-muted:    #5a7080;
+  --color-border:        #d0dce6;
+  --color-success:       #2e7d52;
+  --color-danger:        #c0392b;
+  --color-danger-light:  #fdf0ef;
+  --color-nav-bg:        #355872;
+  --color-nav-text:      #F7F8F0;
+
+  --radius:    10px;
+  --radius-lg: 16px;
+  --shadow:    0 2px 14px rgba(53, 88, 114, 0.10);
+  --shadow-lg: 0 8px 36px rgba(53, 88, 114, 0.16);
+
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ---- Tema oscuro ---- */
+[data-theme="dark"] {
+  --color-primary:       #9CD5FF;
+  --color-primary-light: #7AAACE;
+  --color-accent:        #7AAACE;
+  --color-bg:            #0f1c26;
+  --color-surface:       #172535;
+  --color-surface-2:     #1e3045;
+  --color-text:          #e8f0f7;
+  --color-text-muted:    #7AAACE;
+  --color-border:        #2a4560;
+  --color-success:       #4caf82;
+  --color-danger:        #e57373;
+  --color-danger-light:  #2a1a1a;
+  --color-nav-bg:        #0f1c26;
+  --color-nav-text:      #e8f0f7;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(53, 88, 114, 0.25);
+}
+.btn-primary:hover {
+  background-color: var(--color-primary-light);
+  box-shadow: 0 4px 14px rgba(53, 88, 114, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1.5px solid var(--color-primary);
+}
+.btn-secondary:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--color-border);
+}
+.btn-ghost:hover {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Formularios */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.form-group input,
+.form-group select {
+  padding: 11px 14px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(122, 170, 206, 0.2);
+}
+
+.form-group input.error {
+  border-color: var(--color-danger);
+}
+
+/* Mensajes de error */
+.error-msg {
+  background-color: var(--color-danger-light);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  margin-bottom: 16px;
+}
+
+/* Card genérica */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Tabla */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+thead th {
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 13px 16px;
+  text-align: left;
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+thead th:first-child { border-radius: var(--radius) 0 0 0; }
+thead th:last-child  { border-radius: 0 var(--radius) 0 0; }
+
+tbody tr {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+
+tbody tr:hover {
+  background-color: var(--color-surface-2);
+  cursor: pointer;
+}
+
+tbody td {
+  padding: 13px 16px;
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+/* Montos */
+.monto {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Spinner de carga */
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px;
+}
+
+.spinner::after {
+  content: '';
+  width: 38px;
+  height: 38px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Transición suave al cambiar tema */
+*, *::before, *::after {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}

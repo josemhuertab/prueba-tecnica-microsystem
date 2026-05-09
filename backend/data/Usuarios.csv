@@ -1,0 +1,4 @@
+username,password_hash,nombres,primer_apellido,segundo_apellido,fecha_nacimiento,contraseña_no_incluir
+JuanPerezDelCampo001,a973311dbb6f28cb9b7a87bf92cb33316e739b153eab4c6d68338ec74a8b1600,Juan,Perez,Del Campo,1985-06-12,password123
+MariaLopezContreras002,61f3b50a262eebdf5bff495d28ef5e99a4509d82e183982c8440458cb876cc37,Maria,Lopez,Contreras,1990-03-27,1234secure
+CarlosRodriguezTercero003,b78ec81e15882dfd0647e4d214e6e3d9799e3b82f08b3e5dfbe580654eaa899d,Carlos,Rodriguez,Tercero,1982-11-09,abcDEF456

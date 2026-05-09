@@ -1,0 +1,37 @@
+# =============================================
+# .gitignore — Portal Microsystem
+# =============================================
+
+# Maven / Java
+backend/target/
+backend/*.db
+backend/data/*.db
+*.class
+*.jar
+*.war
+
+# Node / Vue
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Base de datos SQLite (se genera al iniciar)
+*.db
+*.db-shm
+*.db-wal
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+*.suo
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
