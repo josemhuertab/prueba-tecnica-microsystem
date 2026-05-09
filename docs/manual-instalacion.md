@@ -85,7 +85,38 @@ El frontend estará disponible en: **http://localhost:5173**
 
 ---
 
-## 5. Compilar para producción (opcional)
+## 5. Ejecutar los tests unitarios
+
+El proyecto incluye 15 tests unitarios que cubren las tres piezas más críticas del backend:
+
+| Clase de test | Tests | Qué verifica |
+|---|---|---|
+| `AuthServiceTest` | 6 | Validación de formato de usuario, hash SHA-256, credenciales incorrectas |
+| `JwtUtilTest` | 5 | Generación y validación de tokens JWT, tokens vencidos y manipulados |
+| `ReciboServiceTest` | 4 | Consulta de recibos y control de acceso por propietario (IDOR) |
+
+Para ejecutarlos:
+
+```bash
+cd backend
+mvn test
+```
+
+Para ejecutar solo los tests unitarios (sin levantar el contexto de Spring):
+
+```bash
+mvn test -Dtest="AuthServiceTest,JwtUtilTest,ReciboServiceTest"
+```
+
+Resultado esperado:
+```
+Tests run: 15, Failures: 0, Errors: 0, Skipped: 0
+BUILD SUCCESS
+```
+
+---
+
+## 6. Compilar para producción (opcional)
 
 ### Backend (JAR ejecutable)
 ```bash
