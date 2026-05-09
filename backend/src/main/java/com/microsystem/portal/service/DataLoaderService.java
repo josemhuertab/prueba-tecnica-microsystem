@@ -14,8 +14,11 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Carga los datos de los CSV a SQLite al iniciar la aplicación.
- * Solo inserta si la tabla está vacía, para no duplicar datos en reinicios.
+ * Importa los datos de los archivos CSV a SQLite al arrancar la aplicación.
+ *
+ * @PostConstruct hace que cargarDatos() se ejecute automáticamente una vez
+ * que Spring termina de inicializar este componente.
+ * La verificación de count() > 0 evita duplicar datos en reinicios.
  */
 @Service
 public class DataLoaderService {
@@ -36,14 +39,12 @@ public class DataLoaderService {
     }
 
     private void cargarUsuarios() {
-        // Si ya hay datos, no volvemos a cargar
-        if (usuarioRepository.count() > 0) return;
+        if (usuarioRepository.count() > 0) return; // Ya cargados, no duplicar
 
         try (CSVReader reader = new CSVReader(new FileReader("./data/Usuarios.csv"))) {
             List<String[]> filas = reader.readAll();
 
-            // Saltamos la cabecera (primera fila)
-            for (int i = 1; i < filas.size(); i++) {
+            for (int i = 1; i < filas.size(); i++) { // i=1 para saltar la cabecera
                 String[] fila = filas.get(i);
                 if (fila.length < 6) continue;
 
@@ -66,12 +67,12 @@ public class DataLoaderService {
     }
 
     private void cargarRecibos() {
-        if (reciboPagoRepository.count() > 0) return;
+        if (reciboPagoRepository.count() > 0) return; // Ya cargados, no duplicar
 
         try (CSVReader reader = new CSVReader(new FileReader("./data/Recibos de Pago.csv"))) {
             List<String[]> filas = reader.readAll();
 
-            for (int i = 1; i < filas.size(); i++) {
+            for (int i = 1; i < filas.size(); i++) { // i=1 para saltar la cabecera
                 String[] fila = filas.get(i);
                 if (fila.length < 11) continue;
 

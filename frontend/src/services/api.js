@@ -1,12 +1,12 @@
 import axios from 'axios'
 
-// Instancia base de axios apuntando al backend
+// Instancia de axios con la URL base del backend
 const api = axios.create({
   baseURL: '/api',
   headers: { 'Content-Type': 'application/json' }
 })
 
-// Interceptor: adjunta el JWT en cada request si existe
+// Antes de cada petición: adjunta el JWT si existe en localStorage
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
   if (token) {
@@ -15,8 +15,9 @@ api.interceptors.request.use(config => {
   return config
 })
 
-// Interceptor: si el backend responde 401 en rutas protegidas, limpiamos sesión y redirigimos
-// Excluimos /auth/login para que los errores de credenciales los maneje el componente
+// Después de cada respuesta: si el backend devuelve 401 en rutas protegidas,
+// limpiamos la sesión y redirigimos al login.
+// Excluimos /auth/login para que sus errores los maneje el componente directamente.
 api.interceptors.response.use(
   response => response,
   error => {
@@ -30,16 +31,14 @@ api.interceptors.response.use(
   }
 )
 
-// ---- Métodos de autenticación ----
-
+// --- Autenticación ---
 export const login = (username, password) =>
   api.post('/auth/login', { username, password })
 
 export const logout = () =>
   api.post('/auth/logout')
 
-// ---- Métodos de recibos ----
-
+// --- Recibos ---
 export const getRecibos = () =>
   api.get('/recibos')
 

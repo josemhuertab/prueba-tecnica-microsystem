@@ -2,23 +2,18 @@
 # .gitignore — Portal Microsystem
 # =============================================
 
-# Maven / Java
+# Maven / Java — carpeta de compilación generada automáticamente
 backend/target/
-backend/*.db
-backend/data/*.db
-*.class
-*.jar
-*.war
 
-# Node / Vue
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
-
-# Base de datos SQLite (se genera al iniciar)
+# Base de datos SQLite — se genera al iniciar el backend, no debe subirse
 *.db
 *.db-shm
 *.db-wal
+
+# Node.js — dependencias instaladas localmente
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
 
 # Variables de entorno
 .env
@@ -29,8 +24,6 @@ frontend/.vite/
 .idea/
 .vscode/
 *.iml
-*.suo
-*.user
 
 # OS
 .DS_Store

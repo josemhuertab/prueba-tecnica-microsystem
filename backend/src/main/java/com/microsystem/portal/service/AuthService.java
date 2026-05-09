@@ -13,12 +13,21 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 /**
- * Lógica de autenticación: validación de formato, hash y generación de token.
+ * Maneja la lógica de autenticación en tres pasos:
+ *   1. Valida el formato del username con regex
+ *   2. Verifica las credenciales contra el hash almacenado
+ *   3. Genera y retorna el JWT si todo es correcto
  */
 @Service
 public class AuthService {
 
-    // Regex del username: UpperCamelCase, mínimo 15 chars, empieza con letra, termina con 3 dígitos
+    /**
+     * Regex del username según especificación de la prueba:
+     * ^[A-Z]        → empieza con mayúscula
+     * [a-zA-Z0-9]{11,} → al menos 11 caracteres alfanuméricos en el medio
+     * [0-9]{3}$     → termina con exactamente 3 dígitos
+     * Total mínimo: 1 + 11 + 3 = 15 caracteres
+     */
     private static final Pattern USERNAME_PATTERN =
             Pattern.compile("^[A-Z][a-zA-Z0-9]{11,}[0-9]{3}$");
 
@@ -30,38 +39,33 @@ public class AuthService {
         this.jwtUtil = jwtUtil;
     }
 
-    /**
-     * Intenta autenticar al usuario. Retorna el JWT si las credenciales son válidas.
-     * Lanza IllegalArgumentException si el formato del username no es correcto.
-     * Lanza SecurityException si las credenciales no coinciden.
-     */
     public String login(String username, String password) {
-        // Primero validamos el formato del username con regex
+        // Paso 1: formato del username
         if (!USERNAME_PATTERN.matcher(username).matches()) {
             throw new IllegalArgumentException(
-                "El nombre de usuario no cumple el formato requerido. " +
-                "Debe ser UpperCamelCase, mínimo 15 caracteres, comenzar con letra y terminar con 3 dígitos."
+                "El nombre de usuario no cumple el formato requerido."
             );
         }
 
-        // Buscamos el usuario en la base de datos
+        // Paso 2: el usuario debe existir en la base de datos
         Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
         if (usuarioOpt.isEmpty()) {
             throw new SecurityException("Credenciales incorrectas.");
         }
 
-        // Generamos el hash de la contraseña ingresada y comparamos
+        // Paso 3: comparamos el hash generado con el almacenado
         String hashIngresado = generarHash(username, password);
         if (!hashIngresado.equals(usuarioOpt.get().getPasswordHash())) {
             throw new SecurityException("Credenciales incorrectas.");
         }
 
+        // Todo correcto — generamos y retornamos el JWT
         return jwtUtil.generateToken(username);
     }
 
     /**
-     * Genera el hash SHA-256 combinando username:password,
-     * igual que en login_hash_example.py.
+     * Replica exactamente la lógica de login_hash_example.py:
+     * SHA-256("username:password") → string hexadecimal
      */
     private String generarHash(String username, String password) {
         try {

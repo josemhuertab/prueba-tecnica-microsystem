@@ -12,7 +12,7 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginView,
-    // Si ya está autenticado, redirige directo a recibos
+    // Si el usuario ya tiene token, lo mandamos directo a recibos
     beforeEnter: (to, from, next) => {
       if (localStorage.getItem('token')) {
         next('/recibos')
@@ -25,7 +25,7 @@ const routes = [
     path: '/recibos',
     name: 'Recibos',
     component: RecibosView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true }  // Marcada como ruta protegida
   },
   {
     path: '/recibos/:id',
@@ -40,7 +40,8 @@ const router = createRouter({
   routes
 })
 
-// Guard global: protege todas las rutas con requiresAuth
+// Guard global: se ejecuta antes de cada navegación.
+// Si la ruta requiere auth y no hay token, redirige al login.
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !localStorage.getItem('token')) {
     next('/login')

@@ -15,7 +15,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 /**
- * Configuración de seguridad: rutas públicas, rutas protegidas y CORS.
+ * Configuración central de seguridad de la aplicación.
+ *
+ * Define:
+ * - Qué rutas son públicas y cuáles requieren autenticación
+ * - Que la sesión es stateless (sin cookies, todo por JWT)
+ * - CORS: permite peticiones desde el frontend en localhost:5173
  */
 @Configuration
 @EnableWebSecurity
@@ -30,15 +35,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable())           // No necesario en APIs REST con JWT
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Solo el login es público
-                .requestMatchers("/api/auth/login").permitAll()
-                // Todo lo demás requiere autenticación
-                .anyRequest().authenticated()
+                .requestMatchers("/api/auth/login").permitAll()  // Login es la única ruta pública
+                .anyRequest().authenticated()                    // Todo lo demás requiere JWT válido
             )
+            // Nuestro filtro JWT se ejecuta antes del filtro de autenticación estándar de Spring
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -47,6 +51,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
+        // Solo aceptamos peticiones del frontend Vue en desarrollo
         config.setAllowedOrigins(List.of("http://localhost:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
